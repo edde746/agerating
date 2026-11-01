@@ -4,8 +4,8 @@ Suggested minimum ages for about 600,000 films and TV shows on Wikidata, publish
 About 20,000 of the ages are official FSK ratings from Wikidata; the rest are estimates from a fine-tuned language
 model.
 
-Ages are on the German FSK scale: 0, 6, 12, 16, 18. **Estimates are machine predictions, not ratings.** Show them as
-suggestions ("Suggested 12+"), never as an FSK or other official rating; the [license](LICENSE) requires this.
+Ages are on the German FSK scale: 0, 6, 12, 16, 18. **Estimates are machine predictions, not ratings.** Never present
+them as FSK or other official ratings; the [license](LICENSE) requires this.
 
 ## Downloads
 
@@ -139,7 +139,7 @@ Studio, then 41 minutes of training, 79 minutes of scoring and a minute for the 
 
 ## License
 
-The code, model weights and databases are under the [agerating License 1.0](LICENSE):
+The code, model weights and databases are under the [agerating License 1.1](LICENSE):
 
 - **Free use:** free and open-source projects may use them without asking, as long as the use is not commercial.
 - **Needs written approval:** every commercial use, including commercial use by or in a free and open-source
