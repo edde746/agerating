@@ -9,12 +9,13 @@ suggestions ("Suggested 12+"), never as an FSK or other official rating; the [li
 
 ## Downloads
 
-Each [release](https://github.com/edde746/agerating/releases) has two databases, compressed with zstd, and their
-checksums in `SHA256SUMS`:
+Each [release](https://github.com/edde746/agerating/releases) has two databases, compressed with zstd, a gzip copy of
+the small one for platforms without a zstd decoder, and their checksums in `SHA256SUMS`:
 
 | File | Contents | Size |
 |---|---|---|
 | `agerating-ids.db.zst` | small: IMDb, TMDB and TheTVDB ID → age | 2.3 MB (10 MB unpacked) |
+| `agerating-ids.db.gz` | small, gzip | 5.3 MB (10 MB unpacked) |
 | `agerating.db.zst` | full: every title with its external IDs, official rating, estimate and model probabilities | 164 MB (567 MB unpacked) |
 
 ```sh
