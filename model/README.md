@@ -155,7 +155,7 @@ TV, database rule, with article text:
 ## Intended use
 
 Showing a suggested minimum age for films and TV shows that have no official rating, for example in a media library
-app. Label it as a suggestion ("Suggested 12+"), never as an FSK or other official rating. The license requires this.
+app. Never present it as an FSK or other official rating. The license requires this.
 
 ## Limitations
 
@@ -175,7 +175,7 @@ app. Label it as a suggestion ("Suggested 12+"), never as an FSK or other offici
 
 ## License
 
-- **agerating License 1.0** (`LICENSE`): free and open-source projects may use the model without asking, as long as
+- **agerating License 1.1** (`LICENSE`): free and open-source projects may use the model without asking, as long as
   the use is not commercial. Any commercial use, and any use in software that is not free and open source, needs
   written approval from the author.
 - **LFM Open License v1.0** (`LICENSE-LFM`): applies too, because the weights are a derivative of LFM3-1.7B-Base. It

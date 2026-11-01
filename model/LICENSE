@@ -1,5 +1,5 @@
 agerating License
-Version 1.0, October 2026
+Version 1.1, November 2026
 
 Copyright (c) 2026 edde746
 
@@ -61,8 +61,8 @@ terms, at its sole discretion. Approval is valid only in writing and only for th
 (c) Same terms for the Work. You may not offer the Work, or modified versions of it, under any other terms. Your own
     code that uses the Work stays under the license You choose for it.
 (d) Estimates are not official ratings. You must not present Estimates as ratings or classifications of the FSK or
-    of any other rating body, and You must not use a rating body's name or marks for them. Show Estimates as
-    estimates or suggestions (for example "Suggested 12+"). Official ratings in the database may be shown as such.
+    of any other rating body, and You must not use a rating body's name or marks for them. Official ratings in the
+    database may be shown as such.
 (e) Base model terms. The model weights are a derivative of LFM3-1.7B-Base by Liquid AI, Inc. Using or distributing
     them is also subject to the LFM Open License v1.0 (see NOTICE). Approval under section 3 cannot grant rights that
     the LFM Open License does not grant, including Commercial Use by an organisation above its revenue threshold.
