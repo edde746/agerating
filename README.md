@@ -63,24 +63,25 @@ week. The job does not refresh titles already in the database: an estimate stays
 official FSK rating for the title, and titles that are deleted or reclassified on Wikidata stay. A full rebuild
 picks those changes up. Details are in [pipeline/README.md](pipeline/README.md#weekly-updates).
 
-## The first release
+## The current data
 
-The first release is a Wikidata snapshot from 29-30 October 2026: every item whose "instance of" is one of 16 film
-and TV classes (film, short film, animated film, television series, miniseries, anime, web series, ...).
+The databases were rebuilt from a Wikidata snapshot of 1 November 2026 with the v2 model: every item whose "instance
+of" is one of 16 film and TV classes (film, short film, animated film, television series, miniseries, anime, web
+series, ...).
 
 | | Films | TV | Other | Total |
 |---|---|---|---|---|
-| Titles | 431,087 | 165,657 | 593 | 597,337 |
-| Official FSK rating | 19,578 | 59 | 3 | 19,640 |
-| Estimate | 411,509 | 165,598 | 590 | 577,697 |
-| With an IMDb ID | 334,648 | 74,064 | 240 | 408,952 |
-| With a TMDB ID (movie or TV) | 280,622 | 65,332 | 211 | 346,165 |
-| With a TheTVDB ID (series or movie) | 200,926 | 52,432 | 172 | 253,530 |
+| Titles | 431,225 | 165,695 | 592 | 597,512 |
+| Official FSK rating | 19,590 | 59 | 3 | 19,652 |
+| Estimate | 411,635 | 165,636 | 589 | 577,860 |
+| With an IMDb ID | 334,752 | 74,136 | 239 | 409,127 |
+| With a TMDB ID (movie or TV) | 280,742 | 65,432 | 210 | 346,384 |
+| With a TheTVDB ID (series or movie) | 200,938 | 52,453 | 172 | 253,563 |
 
 | Age | 0 | 6 | 12 | 16 | 18 |
 |---|---|---|---|---|---|
-| Official | 1,741 | 3,133 | 7,932 | 5,509 | 1,325 |
-| Estimated | 26,579 | 176,821 | 227,647 | 133,975 | 12,675 |
+| Official | 1,741 | 3,134 | 7,935 | 5,516 | 1,326 |
+| Estimated | 41,788 | 142,173 | 251,221 | 132,281 | 10,397 |
 
 Titles without an English label fall back to the English or German Wikipedia title, then to a label in another
 language.
@@ -91,9 +92,10 @@ language.
    cast, studio, network, series, awards, duration and so on. Ratings from other countries' boards are added
    (MPA PG-13, Kijkwijzer 12, ...), but never the FSK rating itself.
 2. **Wikipedia:** when the title has an English or German Wikipedia article, its plot section or lead is appended.
-   37% of the estimated titles in the first release had one.
+   36.8% of the estimated titles have one.
 3. **Model:** [LFM3-1.7B-Base](https://huggingface.co/LiquidAI/LFM3-1.7B-Base) with LoRA adapters and a classification
-   head, fine-tuned on the 19,701 Wikidata titles that have an official FSK rating.
+   head, fine-tuned on the 19,713 Wikidata titles that have an official FSK rating and on 1,381 TV shows whose FSK
+   rating was looked up on German retail and streaming sites.
 4. **Decision:** the estimate is the smallest age whose cumulative probability reaches 60%, so the model rounds up
    when it is unsure between two ages.
 
@@ -101,18 +103,23 @@ Titles with an official FSK rating keep it, and have no estimate.
 
 ## How good the estimates are
 
-On held-out titles with an official FSK rating (fold 0 of a 5-fold split, 3,941 titles):
+On held-out titles (fold 0 of a 5-fold split), with the database's decision rule:
 
-| | Exact | Within one step | Two or more steps too low |
-|---|---|---|---|
-| With Wikipedia text | 63.4% | 97.0% | 0.61% |
-| Without Wikipedia text | 61.1% | 96.4% | 0.63% |
+| Held-out titles | Number | Exact | Within one step | Two or more steps too low |
+|---|---|---|---|---|
+| Films with an official FSK rating, with Wikipedia text | 3,938 | 63.5% | 97.3% | 0.51% |
+| the same films, Wikipedia text removed | 3,938 | 61.4% | 96.4% | 0.71% |
+| TV shows with an official FSK rating | 59 | 57.6% | 91.5% | 1.69% |
+| TV shows with a looked-up FSK rating | 277 | 63.9% | 98.6% | 1.08% |
 
 - **One step** is one position on the scale 0 → 6 → 12 → 16 → 18.
+- **v2 against v1:** the looked-up TV ratings raised TV accuracy from 51% to 64% exact on held-out shows and halved
+  the suggestions that are too low (Game of Thrones, Shōgun and Succession now get 16 instead of 12). Films are
+  unchanged on the test set. Retraining on the new snapshot moved about a quarter of the estimates for films
+  without a Wikipedia article one step younger, whether or not the TV ratings were used; on held-out films with
+  similarly sparse data, the models' suggestions were older than the official ratings on average.
 - **Label disagreement:** rating boards often disagree by a step. FSK and the MPA give the same age to only 49.8% of
   the films they both rated.
-- **TV:** estimates are the weakest part, because only 93 TV shows have an FSK rating to learn from. Some adult
-  dramas get 12, for example Game of Thrones, Shōgun and Succession.
 - **Obscure titles:** titles with few Wikidata facts and no article are harder than the test set. New titles often
   start on Wikidata with only a few facts.
 
@@ -123,11 +130,11 @@ Details are in the [model card](model/README.md).
 | Path | Contents |
 |---|---|
 | [`pipeline/`](pipeline/) | Python: Wikidata and Wikipedia collection, training, scoring, both database builds, the weekly update and release script |
-| [`model/`](model/) | model card, `config.json` and license files for the Hugging Face model repository `edde746/agerating-lfm3-1.7b-v1`, which also holds `model.safetensors` (66 MB) |
+| [`model/`](model/) | model card, `config.json` and license files for the Hugging Face model repository [`edde746/agerating-lfm3-1.7b-v2`](https://huggingface.co/edde746/agerating-lfm3-1.7b-v2), which also holds `model.safetensors` (66 MB) |
 
 [pipeline/README.md](pipeline/README.md) lists every step of a full rebuild, from the Wikidata collection to the
-databases. The steps add up to about 7 hours on one RTX 4090, most of it rate-limited Wikidata and Wikipedia
-downloads and scoring.
+databases. The 1 November 2026 rebuild took about 3.5 hours: 1.5 hours of Wikidata and Wikipedia downloads on a Mac
+Studio, then 41 minutes of training, 79 minutes of scoring and a minute for the database on one RTX 4090.
 
 ## License
 

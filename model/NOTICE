@@ -15,7 +15,7 @@ This project uses or derives from the following third-party works.
 2. Wikidata (Wikimedia Foundation and contributors), CC0 1.0
    Item labels and descriptions, statements, external identifiers (IMDb, TMDB, TheTVDB and others) and official
    film ratings in the databases come from Wikidata (https://www.wikidata.org): collected through the Wikidata Query
-   Service on 29-30 October 2026, and through the Wikidata API for titles added to Wikidata since then.
+   Service on 1 November 2026, and through the Wikidata API for titles added to Wikidata since then.
 
 3. Wikipedia (Wikimedia Foundation and contributors), CC BY-SA 4.0 / CC BY-SA 3.0
    Lead and plot sections of English and German Wikipedia articles were part of the model input during training and
@@ -26,7 +26,9 @@ This project uses or derives from the following third-party works.
 4. Rating systems
    FSK (Freiwillige Selbstkontrolle der Filmwirtschaft GmbH), MPA, BBFC, Kijkwijzer and the other rating systems are
    named only to identify where official ratings come from. They are not affiliated with this project and have not
-   reviewed or endorsed any estimate.
+   reviewed or endorsed any estimate. Besides the official ratings on Wikidata, the model was trained on 1,381 FSK
+   ratings of TV shows read from German retailer, streaming and database websites (see model/README.md). These
+   ratings are not included in the databases or in this repository.
 
 5. Python packages used by the pipeline (pipeline/requirements.txt) are installed separately and not
    redistributed: PyTorch, Transformers, PEFT, safetensors, huggingface_hub, NumPy, pandas, PyArrow, scikit-learn,

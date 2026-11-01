@@ -18,7 +18,7 @@ TARGET_PID = "P1981"          # FSK film rating: the training label
 TARGET_MAP = {"Q20644794": 0, "Q20644795": 6, "Q20644796": 12, "Q20644797": 16, "Q20644798": 18}
 # Decision rule: the estimate is the smallest age whose cumulative probability reaches TAU (rounds up when unsure).
 TAU = 0.6
-MODEL_NAME = "agerating-lfm3-1.7b-v1"
+MODEL_NAME = "agerating-lfm3-1.7b-v2"
 
 # Film/TV age-rating properties (video-game, app and music ratings excluded); other countries' ratings are model input.
 RATING_PROPS = {

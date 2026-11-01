@@ -59,6 +59,7 @@ notes="Wikidata as of $current.
 
 - $(n "$DB" "SELECT COUNT(*) FROM title") films and TV shows, $(n "$DB" "SELECT COUNT(*) FROM title WHERE $since") added since the previous release; $(n "$DB" "SELECT COUNT(*) FROM title WHERE fsk_official IS NOT NULL") with an official FSK rating.
 - agerating-ids.db: $(n $ids "SELECT COUNT(*) FROM imdb") IMDb, $(n $ids "SELECT COUNT(*) FROM tmdb_movie") TMDB movie, $(n $ids "SELECT COUNT(*) FROM tmdb_tv") TMDB TV, $(n $ids "SELECT COUNT(*) FROM tvdb_series") TheTVDB series and $(n $ids "SELECT COUNT(*) FROM tvdb_movie") TheTVDB movie IDs.
+- Estimates by $(sqlite3 "$DB" "SELECT value FROM info WHERE key = 'model'") (https://huggingface.co/edde746/$(sqlite3 "$DB" "SELECT value FROM info WHERE key = 'model'")).
 
 Ages are suggestions on the FSK scale (0, 6, 12, 16, 18): the official FSK rating where Wikidata has one, otherwise a model estimate. Estimates are not official ratings."
 tag=v$(date -u +%Y.%m.%d)

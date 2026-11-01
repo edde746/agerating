@@ -15,8 +15,9 @@ publishes both databases as a GitHub release.
 ## Setup
 
 - Python 3.12 (with headers: the LFM3 base model compiles GPU kernels on first use)
-- a CUDA GPU for training and batch scoring. The first release was built on an RTX 4090 (24 GB) with a Ryzen 5 7600X
-  and 24 GB RAM. `update.py` also runs on Apple silicon or CPU, see [Weekly updates](#weekly-updates).
+- a GPU for training and batch scoring. Releases are trained and scored on an RTX 4090 (24 GB) with a Ryzen 5 7600X
+  and 24 GB RAM. `train.py` also runs on Apple silicon (MPS): one fold took 95 min on an M5 Max, against about 35 min
+  on the 4090. `update.py` also runs on CPU, see [Weekly updates](#weekly-updates).
 
 ```sh
 cd pipeline
@@ -31,22 +32,23 @@ export AGERATING_USER_AGENT="agerating-pipeline/1.0 (https://example.org/you; yo
 
 ## Steps
 
-Timings are from the first release build on the machine above. Every collection step is resumable: rerun the same
-command after an interruption.
+Timings are from the 1 November 2026 rebuild: steps 1-8 on a Mac Studio (M5 Max), steps 9-12 on the RTX 4090. The
+download steps depend mostly on Wikimedia rate limits; the first build in October needed about 40 min for each of
+steps 6 and 2 hours for step 8. Every collection step is resumable: rerun the same command after an interruption.
 
 | # | Command | Output | Time |
 |---|---|---|---|
-| 1 | `python wikidata.py items` | `data/wd/items.parquet`: 597k universe items and the 19.7k FSK-rated items | minutes |
+| 1 | `python wikidata.py items` | `data/wd/items.parquet`: 598k universe items and the 19.8k FSK-rated items | minutes |
 | 2 | `python wikidata.py stmts` | `data/wd/stmts_*.parquet`, `meta_*.parquet`: 14.7M truthy statements, 250 items per query | ~1 h |
 | 3 | `python wikidata.py labels` | `data/wd/labels.parquet`: labels of linked items (people, genres, studios, ...) | ~10 min |
 | 4 | `python wikidata.py ids` | `data/wd/ids.parquet`, `id_properties.parquet`: external IDs of the universe items | < 1 min |
 | 5 | `python wikidata.py titles` | `data/wd/item_labels.parquet`: any-language titles for items without an English one | ~1 min |
-| 6 | `python wikipedia.py api en --training`<br>`python wikipedia.py api de --training` | API text for the FSK-rated items (training input) | ~40 min each |
-| 7 | `python wikipedia.py dump en`<br>`python wikipedia.py dump de` | dump text (20231101) for the remaining items; downloads 11 + 5 GB | 5 + 3 min after download |
-| 8 | `python wikipedia.py api en`<br>`python wikipedia.py api de` | API text for articles missing from the dump | 95 + 28 min |
-| 9 | `python train.py` | `models/agerating-lfm3-1.7b-v1/` (`config.json`, `model.safetensors`) | 40 min |
-| 10 | `python score.py` | `data/serial_univ.parquet` (model inputs), `data/pred/agerating-lfm3-1.7b-v1.parquet` | 81 min |
-| 11 | `python build_db.py` | `data/agerating.db` (570 MB) | 1 min |
+| 6 | `python wikipedia.py api en --training`<br>`python wikipedia.py api de --training` | API text for the FSK-rated items (training input) | 5 + 5 min |
+| 7 | `python wikipedia.py dump en`<br>`python wikipedia.py dump de` | dump text (20231101) for the remaining items; downloads 11 + 5 GB | 3 + 2 min |
+| 8 | `python wikipedia.py api en`<br>`python wikipedia.py api de` | API text for articles missing from the dump | 11 + 2 min |
+| 9 | `python train.py --labels FILE` | `models/agerating-lfm3-1.7b-v2/` (`config.json`, `model.safetensors`) | 41 min |
+| 10 | `python score.py` | `data/serial_univ.parquet` (model inputs), `data/pred/agerating-lfm3-1.7b-v2.parquet` | 79 min |
+| 11 | `python build_db.py` | `data/agerating.db` (588 MB) | 1 min |
 | 12 | `python build_ids_db.py` | `data/agerating-ids.db` (10 MB) | seconds |
 
 `python wikidata.py all` runs steps 1-5. The Wikipedia API steps are slow because Wikipedia rate-limits bulk
@@ -56,8 +58,14 @@ To evaluate instead of training the final model, run `python train.py --fold 0` 
 `--split group` keeps titles of the same series or director in one fold. This writes `results/eval.csv` and
 out-of-fold probabilities to `results/oof/`, for the full input and with the Wikipedia line removed.
 
+`--labels FILE` adds training labels for titles without an official FSK rating: a parquet or CSV file with the
+columns `qid` and `age` (0, 6, 12, 16 or 18). Official ratings win where both exist. With `--fold`, these titles are
+split into their own five folds and scored separately (`extra_*` columns in `results/eval.csv`). The released v2
+model was trained with a file of 1,381 TV ratings that is not published, see the
+[model card](../model/README.md#training).
+
 To use the released model instead of training (step 9), put its files (`config.json`, `model.safetensors`) in
-`models/agerating-lfm3-1.7b-v1/`, or pass `--model DIR` to `score.py` and `update.py`.
+`models/agerating-lfm3-1.7b-v2/`, or pass `--model DIR` to `score.py` and `update.py`.
 
 ## Modules
 
@@ -133,7 +141,7 @@ launchctl print gui/$(id -u)/app.agerating.weekly        # state, last exit code
 tail -f ~/Library/Logs/agerating.log
 ```
 
-The working database is `~/agerating/pipeline/data/agerating.db`, the model `models/agerating-lfm3-1.7b-v1/`.
+The working database is `~/agerating/pipeline/data/agerating.db`, the model `models/agerating-lfm3-1.7b-v2/`.
 
 ## Rebuilding everything
 

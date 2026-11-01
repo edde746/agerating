@@ -1,5 +1,5 @@
 {
-  "name": "agerating-lfm3-1.7b-v1",
+  "name": "agerating-lfm3-1.7b-v2",
   "base_model": "LiquidAI/LFM3-1.7B-Base",
   "base_revision": "545fc8f4c7b5fa9f405105274cd29c4f8f44b526",
   "lora": {
@@ -20,12 +20,14 @@
   "target": "P1981",
   "tau": 0.6,
   "training": {
-    "items": 19701,
+    "items": 21094,
+    "extra_labels": 1381,
     "epochs": 1,
     "batch_size": 8,
     "lr": 0.0001,
     "text_dropout": 0.5,
-    "minutes": 39.8,
-    "trained_at": "2026-10-30T08:15:00+00:00"
+    "minutes": 41.1,
+    "device": "cuda",
+    "trained_at": "2026-11-01T10:15:19+00:00"
   }
 }
