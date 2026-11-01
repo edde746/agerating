@@ -1,0 +1,11 @@
+# Release files (published as GitHub releases); model.safetensors goes to Hugging Face
+/data/
+/model/model.safetensors
+
+# Pipeline working data
+/pipeline/data/
+/pipeline/models/
+/pipeline/results/
+/pipeline/.venv/
+__pycache__/
+.DS_Store

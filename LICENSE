@@ -1,0 +1,101 @@
+agerating License
+Version 1.0, October 2026
+
+Copyright (c) 2026 edde746
+
+This license covers the agerating source code, model weights, database and documentation. In short: free and
+open-source projects may use them without asking, as long as the use is not commercial. Every commercial use, and
+every use in software that is not free and open source, needs written approval from the Licensor first. The full
+terms below are what apply.
+
+1. Definitions
+
+"Licensor" means edde746, the copyright holder of the Work.
+
+"Work" means everything the Licensor distributes under this license: the source code of the data pipeline, the
+trained model weights and their configuration, the databases of titles and age estimates (full and small), and the
+documentation, in original or modified form.
+
+"Estimates" means the age suggestions, probabilities and confidence values produced by the Work's model, whether
+they come with the Work or are produced by running it.
+
+"You" means the individual or legal entity exercising rights under this license, together with every entity that
+controls it, is controlled by it, or is under common control with it.
+
+"FOSS Project" means a software project whose complete source code is publicly available at no charge, under one or
+more licenses approved by the Open Source Initiative or listed as free software licenses by the Free Software
+Foundation. The Work itself may be part of a FOSS Project and stays under this license.
+
+"Commercial Use" means any use of the Work, or of anything built with it, that is intended for or directed towards
+commercial advantage or monetary compensation, directly or indirectly. It includes, for example, use in or for:
+  (a) a product or service that is sold, licensed for a fee, or offered by subscription;
+  (b) a product or service with paid features, paid tiers or in-app purchases, even if the rest is free;
+  (c) a product or service that shows advertising, sells or licenses data, or is offered as a paid hosted service;
+  (d) the business operations of a for-profit organisation, including internal use;
+  (e) consulting, integration or support work done for payment.
+Receiving voluntary donations or sponsorship for a FOSS Project is not Commercial Use by itself, as long as no
+feature, priority, service or access depends on paying.
+
+2. Permitted use without approval
+
+Subject to the conditions in section 4, the Licensor grants You a worldwide, non-exclusive, royalty-free,
+non-transferable license to use, copy, modify and distribute the Work, and works based on it:
+  (a) as part of a FOSS Project, provided the use is not Commercial Use; and
+  (b) for personal use, research, testing and evaluation, provided the use is not Commercial Use and You do not
+      distribute the Work, or a product or service built with it, to others outside a FOSS Project.
+
+3. Uses that need approval
+
+Every use not permitted by section 2 needs the Licensor's prior written approval. This includes:
+  (a) any Commercial Use, including Commercial Use by or within a FOSS Project; and
+  (b) any use in software that is not a FOSS Project, even if that software is free of charge.
+Ask for approval through the contact in section 10. The Licensor may grant approval, refuse it, or grant it on
+terms, at its sole discretion. Approval is valid only in writing and only for the scope stated in it.
+
+4. Conditions
+
+(a) Notices. Every copy of the Work or of a substantial part of it, modified or not, must include this license and
+    the copyright notice above. Modified files must carry a prominent notice that You changed them.
+(b) Attribution. A distributed product or service that uses the Work or its Estimates must credit agerating in its
+    documentation, about screen or equivalent place.
+(c) Same terms for the Work. You may not offer the Work, or modified versions of it, under any other terms. Your own
+    code that uses the Work stays under the license You choose for it.
+(d) Estimates are not official ratings. You must not present Estimates as ratings or classifications of the FSK or
+    of any other rating body, and You must not use a rating body's name or marks for them. Show Estimates as
+    estimates or suggestions (for example "Suggested 12+"). Official ratings in the database may be shown as such.
+(e) Base model terms. The model weights are a derivative of LFM3-1.7B-Base by Liquid AI, Inc. Using or distributing
+    them is also subject to the LFM Open License v1.0 (see NOTICE). Approval under section 3 cannot grant rights that
+    the LFM Open License does not grant, including Commercial Use by an organisation above its revenue threshold.
+
+5. Wikidata facts
+
+Many facts in the database (titles, years, external IDs, official ratings) come from Wikidata, which publishes them
+under CC0 1.0. Anyone may obtain those facts from Wikidata directly without restriction. This license covers the Work
+as distributed by the Licensor, including the selection and arrangement of the database and the Estimates.
+
+6. No trademark rights
+
+This license grants no rights to use the Licensor's names or marks, or those of any rating body or data source,
+except to describe the origin of the Work as required by section 4.
+
+7. Termination
+
+Your rights under this license end automatically if You fail to comply with it. If You fix the failure within 30
+days of first becoming aware of it, Your rights are reinstated, unless the Licensor has told You in writing before
+then that they are terminated. Sections 8 and 9 survive termination.
+
+8. No warranty
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY AND NON-INFRINGEMENT. ESTIMATES ARE MACHINE
+PREDICTIONS AND CAN BE WRONG; THEY ARE NOT A SUBSTITUTE FOR AN OFFICIAL RATING OR FOR PARENTAL JUDGEMENT.
+
+9. Limitation of liability
+
+IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE WORK OR THE USE OF OR OTHER DEALINGS IN THE WORK,
+INCLUDING RELIANCE ON ANY ESTIMATE, EXCEPT WHERE SUCH LIABILITY CANNOT BE EXCLUDED UNDER APPLICABLE LAW.
+
+10. Contact
+
+Requests for approval and questions about this license: contact edde746 through https://github.com/edde746.
