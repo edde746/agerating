@@ -53,9 +53,8 @@ fi
 rm -rf "$OUT" && mkdir "$OUT"
 zstd -19 -T0 -q "$DB" -o "$OUT/agerating.db.zst"
 zstd -19 -T0 -q data/agerating-ids.db -o "$OUT/agerating-ids.db.zst"
-gzip -9 -n -c data/agerating-ids.db > "$OUT/agerating-ids.db.gz"
 gzip -9 -n -c data/agerating-ids.bin > "$OUT/agerating-ids.bin.gz"
-(cd "$OUT" && shasum -a 256 agerating-ids.db.zst agerating-ids.db.gz agerating-ids.bin.gz agerating.db.zst > SHA256SUMS)
+(cd "$OUT" && shasum -a 256 agerating-ids.db.zst agerating-ids.bin.gz agerating.db.zst > SHA256SUMS)
 
 ids=data/agerating-ids.db
 n() { printf "%'d" "$(sqlite3 "$1" "$2")"; }

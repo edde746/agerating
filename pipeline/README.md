@@ -120,8 +120,8 @@ Measured on those 306 titles:
 | MacBook Pro, M5 Pro (CPU, 4 threads) | 13.3 min |
 
 `weekly.sh` runs the update and, if the database changed since the last published release, rebuilds the small
-database and its packed list (checked against the database), compresses both databases with `zstd -19` and the small
-database and the packed list with `gzip -9 -n`, writes `SHA256SUMS` and creates the release `vYYYY.MM.DD` with `gh`. The
+database and its packed list (checked against the database), compresses both databases with `zstd -19` and the packed
+list with `gzip -9 -n`, writes `SHA256SUMS` and creates the release `vYYYY.MM.DD` with `gh`. The
 database's version is `updated_at` from its `info` table (set when `update.py` adds titles), or `built_at` for a fresh
 build. The script records the published version in `data/published` only after the release exists, so a failed
 upload is retried on the next run. When `data/agerating.db` is missing it starts from the latest release.
