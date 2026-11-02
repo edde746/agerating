@@ -9,12 +9,14 @@ them as FSK or other official ratings; the [license](LICENSE) requires this.
 
 ## Downloads
 
-Each [release](https://github.com/edde746/agerating/releases) has two databases, compressed with zstd, a gzip copy of
-the small one for platforms without a zstd decoder, and their checksums in `SHA256SUMS`:
+Each [release](https://github.com/edde746/agerating/releases) has two databases, compressed with zstd, the small one's
+lookups as a gzipped packed list and a gzip copy of it for platforms without a zstd decoder, and their checksums in
+`SHA256SUMS`:
 
 | File | Contents | Size |
 |---|---|---|
 | `agerating-ids.db.zst` | small: IMDb, TMDB and TheTVDB ID → age | 2.3 MB (10 MB unpacked) |
+| `agerating-ids.bin.gz` | the small database's lookups as a [packed list](#the-packed-list), gzip | 0.8 MB (2 MB unpacked) |
 | `agerating-ids.db.gz` | small, gzip | 5.3 MB (10 MB unpacked) |
 | `agerating.db.zst` | full: every title with its external IDs, official rating, estimate and model probabilities | 164 MB (567 MB unpacked) |
 
@@ -39,6 +41,24 @@ One table per ID type, each `(id INTEGER PRIMARY KEY, age INTEGER NOT NULL)`:
 TMDB and TheTVDB number movies and series separately, so look IDs up in the matching table. `age` is the official
 FSK rating where Wikidata has one, otherwise the estimate. When an ID belongs to several Wikidata items, an official
 rating wins, otherwise the highest estimate. IDs that are not plain numbers on Wikidata (URLs, slugs) are left out.
+
+### The packed list
+
+`agerating-ids.bin.gz` holds the same IDs and ages as the small database in a form an app can read with nothing but
+a gzip decoder. Integers are little-endian; a varint is LEB128 (7 bits per byte, low bits first, the high bit set on
+every byte but the last).
+
+| Bytes | Contents |
+|---|---|
+| 4 | `AGID` |
+| 1 | format version, `1` |
+| 1 | number of tables, then per table: |
+| 1 + name | the name's length and the table's name in ASCII, as in the small database (`imdb`, `tmdb_movie`, ...) |
+| 4 | the number of rows |
+| one varint per row | the IDs in ascending order, each as its gap from the previous ID (the first from 0) |
+| one byte per row | the ages, in the same order (0, 6, 12, 16 or 18) |
+
+`pipeline/pack_ids.py` writes it and has a reference reader (`read`).
 
 ### The full database
 

@@ -50,6 +50,7 @@ steps 6 and 2 hours for step 8. Every collection step is resumable: rerun the sa
 | 10 | `python score.py` | `data/serial_univ.parquet` (model inputs), `data/pred/agerating-lfm3-1.7b-v2.parquet` | 79 min |
 | 11 | `python build_db.py` | `data/agerating.db` (588 MB) | 1 min |
 | 12 | `python build_ids_db.py` | `data/agerating-ids.db` (10 MB) | seconds |
+| 13 | `python pack_ids.py --check` | `data/agerating-ids.bin` (2 MB), the small database's packed list | seconds |
 
 `python wikidata.py all` runs steps 1-5. The Wikipedia API steps are slow because Wikipedia rate-limits bulk
 fetching; the code honours `Retry-After`.
@@ -81,9 +82,10 @@ To use the released model instead of training (step 9), put its files (`config.j
 | `score.py` | scores every universe title without an official rating |
 | `build_db.py` | the full database, see the schema in its docstring |
 | `build_ids_db.py` | the small database: one `(id, age)` table per ID type |
+| `pack_ids.py` | the small database's lookups as a packed list (layout in its docstring), with a reference reader |
 | `wikidata_live.py` | per-item Wikidata API access for `update.py`, in the same format as the batch collection |
 | `update.py` | adds titles that appeared on Wikidata since the last build or update |
-| `weekly.sh` | the weekly job: `update.py`, `build_ids_db.py`, GitHub release |
+| `weekly.sh` | the weekly job: `update.py`, `build_ids_db.py`, `pack_ids.py`, GitHub release |
 
 ## Weekly updates
 
@@ -118,8 +120,8 @@ Measured on those 306 titles:
 | MacBook Pro, M5 Pro (CPU, 4 threads) | 13.3 min |
 
 `weekly.sh` runs the update and, if the database changed since the last published release, rebuilds the small
-database, compresses both with `zstd -19` and the small one also with `gzip -9 -n`, writes `SHA256SUMS` and creates the
-release `vYYYY.MM.DD` with `gh`. The
+database and its packed list (checked against the database), compresses both databases with `zstd -19` and the small
+database and the packed list with `gzip -9 -n`, writes `SHA256SUMS` and creates the release `vYYYY.MM.DD` with `gh`. The
 database's version is `updated_at` from its `info` table (set when `update.py` adds titles), or `built_at` for a fresh
 build. The script records the published version in `data/published` only after the release exists, so a failed
 upload is retried on the next run. When `data/agerating.db` is missing it starts from the latest release.

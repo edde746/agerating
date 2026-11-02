@@ -4,7 +4,8 @@
 # 1. data/agerating.db is the working copy. When it is missing, the latest release's agerating.db.zst is downloaded.
 # 2. update.py adds the items that appeared on Wikidata since the last run.
 # 3. If the database changed since the last published release, the small database is rebuilt and both databases are
-#    published as release vYYYY.MM.DD (zstd, plus a gzip copy of the small database), with SHA256SUMS. The database's
+#    published as release vYYYY.MM.DD (zstd, plus a gzip copy of the small database and its packed list, pack_ids.py),
+#    with SHA256SUMS. The database's
 #    version is info.updated_at (set by update.py when it adds titles), else info.built_at (a fresh build);
 #    data/published holds the last published version and is written only after the release exists, so a failed
 #    upload is retried on the next run.
@@ -48,11 +49,13 @@ if [ "$current" = "$published" ]; then
 fi
 
 "$PY" build_ids_db.py "$DB" data/agerating-ids.db
+"$PY" pack_ids.py data/agerating-ids.db data/agerating-ids.bin --check
 rm -rf "$OUT" && mkdir "$OUT"
 zstd -19 -T0 -q "$DB" -o "$OUT/agerating.db.zst"
 zstd -19 -T0 -q data/agerating-ids.db -o "$OUT/agerating-ids.db.zst"
 gzip -9 -n -c data/agerating-ids.db > "$OUT/agerating-ids.db.gz"
-(cd "$OUT" && shasum -a 256 agerating-ids.db.zst agerating-ids.db.gz agerating.db.zst > SHA256SUMS)
+gzip -9 -n -c data/agerating-ids.bin > "$OUT/agerating-ids.bin.gz"
+(cd "$OUT" && shasum -a 256 agerating-ids.db.zst agerating-ids.db.gz agerating-ids.bin.gz agerating.db.zst > SHA256SUMS)
 
 ids=data/agerating-ids.db
 n() { printf "%'d" "$(sqlite3 "$1" "$2")"; }
