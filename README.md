@@ -10,14 +10,12 @@ them as FSK or other official ratings; the [license](LICENSE) requires this.
 ## Downloads
 
 Each [release](https://github.com/edde746/agerating/releases) has two databases, compressed with zstd, the small one's
-lookups as a gzipped packed list and a gzip copy of it for platforms without a zstd decoder, and their checksums in
-`SHA256SUMS`:
+lookups as a gzipped packed list, and their checksums in `SHA256SUMS`:
 
 | File | Contents | Size |
 |---|---|---|
 | `agerating-ids.db.zst` | small: IMDb, TMDB and TheTVDB ID → age | 2.3 MB (10 MB unpacked) |
 | `agerating-ids.bin.gz` | the small database's lookups as a [packed list](#the-packed-list), gzip | 0.8 MB (2 MB unpacked) |
-| `agerating-ids.db.gz` | small, gzip | 5.3 MB (10 MB unpacked) |
 | `agerating.db.zst` | full: every title with its external IDs, official rating, estimate and model probabilities | 164 MB (567 MB unpacked) |
 
 ```sh
