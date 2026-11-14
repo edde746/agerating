@@ -10,12 +10,13 @@ them as FSK or other official ratings; the [license](LICENSE) requires this.
 ## Downloads
 
 Each [release](https://github.com/edde746/agerating/releases) has two databases, compressed with zstd, the small one's
-lookups as a gzipped packed list, and their checksums in `SHA256SUMS`:
+lookups as gzipped packed lists, and their checksums in `SHA256SUMS`:
 
 | File | Contents | Size |
 |---|---|---|
 | `agerating-ids.db.zst` | small: IMDb, TMDB and TheTVDB ID → age | 2.3 MB (10 MB unpacked) |
-| `agerating-ids.bin.gz` | the small database's lookups as a [packed list](#the-packed-list), gzip | 0.8 MB (2 MB unpacked) |
+| `agerating-ids.trave.gz` | the small database's lookups as a [Trave file](#the-trave-file), gzip | 0.8 MB (2 MB unpacked) |
+| `agerating-ids.bin.gz` | the same lookups in the [legacy packed list](#the-legacy-packed-list), gzip | 0.8 MB (2 MB unpacked) |
 | `agerating.db.zst` | full: every title with its external IDs, official rating, estimate and model probabilities | 164 MB (567 MB unpacked) |
 
 ```sh
@@ -40,11 +41,26 @@ TMDB and TheTVDB number movies and series separately, so look IDs up in the matc
 FSK rating where Wikidata has one, otherwise the estimate. When an ID belongs to several Wikidata items, an official
 rating wins, otherwise the highest estimate. IDs that are not plain numbers on Wikidata (URLs, slugs) are left out.
 
-### The packed list
+### The Trave file
 
-`agerating-ids.bin.gz` holds the same IDs and ages as the small database in a form an app can read with nothing but
-a gzip decoder. Integers are little-endian; a varint is LEB128 (7 bits per byte, low bits first, the high bit set on
-every byte but the last).
+`agerating-ids.trave.gz` holds the same IDs and ages as the small database in a form an app can read without SQLite.
+It is a [Trave](https://github.com/edde746/trave) file (see the spec there) with magic `AGRT`. Apps read it with any
+Trave library (Python `trave`, Go `github.com/edde746/trave/go`, Kotlin `dev.edde746:trave`, Dart `trave`) or with
+nothing but a gzip decoder by following the spec.
+
+It has one table per ID type, named and ordered as in the small database (`imdb`, `tmdb_movie`, `tmdb_tv`,
+`tvdb_series`, `tvdb_movie`), each with two columns and no absent values:
+
+| Column | Type | Contents |
+|---|---|---|
+| `id` | `int_delta` | the IDs in ascending order |
+| `age` | `int` | the ages, in the same order (0, 6, 12, 16 or 18) |
+
+### The legacy packed list
+
+`agerating-ids.bin.gz` holds the same lookups in an older layout. It remains published for existing readers; new
+readers should use `agerating-ids.trave.gz`. Integers are little-endian; a varint is LEB128 (7 bits per byte, low bits
+first, the high bit set on every byte but the last).
 
 | Bytes | Contents |
 |---|---|
@@ -56,7 +72,7 @@ every byte but the last).
 | one varint per row | the IDs in ascending order, each as its gap from the previous ID (the first from 0) |
 | one byte per row | the ages, in the same order (0, 6, 12, 16 or 18) |
 
-`pipeline/pack_ids.py` writes it and has a reference reader (`read`).
+`pipeline/pack_ids.py` writes both files and has a reference reader for this one (`read_legacy`).
 
 ### The full database
 
